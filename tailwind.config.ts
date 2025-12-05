@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        display: ['Rajdhani', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,13 +51,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        legendary: "hsl(var(--legendary))",
-        epic: "hsl(var(--epic))",
-        rare: "hsl(var(--rare))",
-        common: "hsl(var(--common))",
-        rising: "hsl(var(--rising))",
-        falling: "hsl(var(--falling))",
-        stable: "hsl(var(--stable))",
+        gold: "hsl(var(--gold))",
+        green: "hsl(var(--green))",
+        red: "hsl(var(--red))",
+        discord: "hsl(var(--discord))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -83,25 +80,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "float": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" },
-        },
-        "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px -5px hsl(var(--primary) / 0.4)" },
-          "50%": { boxShadow: "0 0 30px -5px hsl(var(--primary) / 0.6)" },
-        },
-        "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "float": "float 3s ease-in-out infinite",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "fade-up": "fade-up 0.5s ease-out forwards",
       },
     },
   },
