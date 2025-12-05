@@ -1,75 +1,93 @@
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
-
-type Rarity = 'legendary' | 'epic' | 'rare' | 'common';
-type Trend = 'rising' | 'falling' | 'stable';
+import { GameItem, formatValue } from "@/data/gameData";
+import { cn } from "@/lib/utils";
 
 interface ItemCardProps {
-  name: string;
-  valueRange: string;
-  rarity: Rarity;
-  trend: Trend;
-  description: string;
-  imageUrl?: string;
+  item: GameItem;
+  showGame?: boolean;
+  gameName?: string;
+  onClick?: () => void;
 }
 
-const rarityConfig = {
+const rarityConfig: Record<string, { label: string; className: string }> = {
+  chroma: { label: 'Chroma', className: 'badge-chroma' },
+  godly: { label: 'Godly', className: 'badge-godly' },
+  ancient: { label: 'Ancient', className: 'badge-ancient' },
   legendary: { label: 'Legendary', className: 'badge-legendary' },
   epic: { label: 'Epic', className: 'badge-epic' },
   rare: { label: 'Rare', className: 'badge-rare' },
+  uncommon: { label: 'Uncommon', className: 'badge-uncommon' },
   common: { label: 'Common', className: 'badge-common' },
+  vintage: { label: 'Vintage', className: 'badge-legendary' },
 };
 
-const trendConfig = {
-  rising: { label: 'Rising', className: 'trend-rising', icon: TrendingUp },
-  falling: { label: 'Falling', className: 'trend-falling', icon: TrendingDown },
-  stable: { label: 'Stable', className: 'trend-stable', icon: Minus },
-};
+const ItemCard = ({ item, showGame, gameName, onClick }: ItemCardProps) => {
+  const rarityInfo = rarityConfig[item.rarity] || rarityConfig.common;
+  
+  const TrendIcon = item.trend === 'rising' ? TrendingUp : item.trend === 'falling' ? TrendingDown : Minus;
+  const trendClass = item.trend === 'rising' ? 'trend-rising' : item.trend === 'falling' ? 'trend-falling' : 'trend-stable';
 
-const ItemCard = ({ name, valueRange, rarity, trend, description, imageUrl }: ItemCardProps) => {
-  const rarityInfo = rarityConfig[rarity];
-  const trendInfo = trendConfig[trend];
-  const TrendIcon = trendInfo.icon;
+  const demandColor = item.demand >= 8 ? 'text-green' : item.demand >= 5 ? 'text-gold' : 'text-red';
 
   return (
-    <div className="group relative bg-card border border-border rounded-xl p-6 card-hover cursor-pointer">
-      {/* Hover glow effect */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+    <div 
+      className={cn(
+        "group relative bg-card border border-border rounded-xl p-4 card-hover cursor-pointer",
+        onClick && "cursor-pointer"
+      )}
+      onClick={onClick}
+    >
+      {/* Glow effect */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
       
       <div className="relative z-10 flex flex-col items-center text-center">
-        {/* Item Image Placeholder */}
-        {imageUrl ? (
-          <img src={imageUrl} alt={name} className="w-20 h-20 rounded-lg mb-4 object-cover" />
-        ) : (
-          <div className="w-20 h-20 rounded-lg mb-4 bg-secondary flex items-center justify-center">
-            <span className="text-3xl">🚗</span>
-          </div>
+        {/* Game Badge */}
+        {showGame && gameName && (
+          <span className="text-xs font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded mb-2">
+            {gameName}
+          </span>
         )}
 
+        {/* Item Image/Emoji */}
+        <div className="w-16 h-16 rounded-lg mb-3 bg-secondary/50 flex items-center justify-center text-4xl">
+          {item.imageUrl}
+        </div>
+
         {/* Rarity Badge */}
-        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium mb-3 ${rarityInfo.className}`}>
+        <span className={cn("inline-flex px-2 py-0.5 rounded-full text-xs font-semibold mb-2", rarityInfo.className)}>
           {rarityInfo.label}
         </span>
 
         {/* Item Name */}
-        <h3 className="font-display font-semibold text-primary text-lg mb-2">
-          {name}
+        <h3 className="font-display font-bold text-foreground text-sm mb-1 line-clamp-1">
+          {item.name}
         </h3>
 
-        {/* Value Range */}
-        <p className="font-display text-2xl font-bold text-foreground mb-3">
-          {valueRange}
+        {/* Value */}
+        <p className="font-display text-xl font-bold text-primary mb-2">
+          {formatValue(item.value)}
         </p>
 
-        {/* Trend Badge */}
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium mb-4 ${trendInfo.className}`}>
-          <TrendIcon className="w-3.5 h-3.5" />
-          {trendInfo.label}
-        </span>
+        {/* Trend & Demand Row */}
+        <div className="flex items-center gap-2 mb-2">
+          <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", trendClass)}>
+            <TrendIcon className="w-3 h-3" />
+            {item.trend}
+          </span>
+        </div>
 
-        {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {description}
-        </p>
+        {/* Demand */}
+        <div className="flex items-center gap-1">
+          <span className="text-xs text-muted-foreground">Demand:</span>
+          <span className={cn("text-xs font-bold", demandColor)}>{item.demand}/10</span>
+        </div>
+
+        {/* Last Change */}
+        {item.lastChange !== 0 && item.lastChange !== undefined && (
+          <div className={cn("text-xs mt-1", item.lastChange > 0 ? "text-green" : "text-red")}>
+            {item.lastChange > 0 ? '+' : ''}{formatValue(item.lastChange)}
+          </div>
+        )}
       </div>
     </div>
   );

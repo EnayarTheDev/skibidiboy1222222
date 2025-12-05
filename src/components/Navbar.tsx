@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, LogIn, Menu, X, DollarSign, ShoppingBag } from "lucide-react";
+import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, Skull, TrendingUp, Gamepad2 } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -8,15 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const games = [
-  { name: "Murder Mystery 2", slug: "mm2" },
-  { name: "Blade Ball", slug: "bladeball" },
-  { name: "Blox Fruits", slug: "bloxfruits" },
-  { name: "Grow a Garden", slug: "growagarden" },
-  { name: "Pet Simulator 99", slug: "petsim99" },
-  { name: "Adopt Me", slug: "adoptme" },
-];
+import { games } from "@/data/gameData";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,26 +19,31 @@ export const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="font-display text-2xl font-bold">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <Gamepad2 className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <span className="font-display text-xl font-bold">
               <span className="text-foreground">ROBLOX</span>
               <span className="text-primary">VALUES</span>
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-foreground/80 hover:text-foreground transition-colors">
+          <div className="hidden lg:flex items-center gap-1">
+            <Link to="/" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors">
               Home
             </Link>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-foreground/80 hover:text-foreground transition-colors">
+              <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors">
+                <Gamepad2 className="h-4 w-4" />
                 Games <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-card border-border">
+              <DropdownMenuContent className="bg-card border-border w-56">
                 {games.map((game) => (
                   <DropdownMenuItem key={game.slug} asChild>
-                    <Link to={`/game/${game.slug}`} className="cursor-pointer">
+                    <Link to={`/game/${game.slug}`} className="cursor-pointer flex items-center gap-2">
+                      <span className="text-lg">{game.items[0]?.imageUrl}</span>
                       {game.name}
                     </Link>
                   </DropdownMenuItem>
@@ -54,42 +51,48 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link to="/shop" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
-              <ShoppingBag className="h-4 w-4 text-primary" />
-              Shop
-            </Link>
-
-            <Link to="/calculator" className="text-foreground/80 hover:text-foreground transition-colors">
+            <Link to="/calculator" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <Calculator className="h-4 w-4 text-primary" />
               Calculator
             </Link>
 
-            <Link to="/trades" className="text-foreground/80 hover:text-foreground transition-colors">
+            <Link to="/values" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-green" />
+              Values
+            </Link>
+
+            <Link to="/trades" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <Repeat className="h-4 w-4 text-accent" />
               Trades
             </Link>
 
-            <Link to="/blackmarket" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
-              <DollarSign className="h-4 w-4 text-destructive" />
-              Black Market
+            <Link to="/shop" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <ShoppingBag className="h-4 w-4 text-gold" />
+              Shop
             </Link>
 
-            <Link to="/values" className="text-foreground/80 hover:text-foreground transition-colors">
-              Value Changes
+            <Link to="/blackmarket" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <Skull className="h-4 w-4 text-destructive" />
+              Black Market
             </Link>
           </div>
 
-          {/* Auth Button */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" asChild>
+          {/* Auth Buttons */}
+          <div className="hidden lg:flex items-center gap-3">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/login">Log In</Link>
+            </Button>
+            <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
               <Link to="/login">
                 <LogIn className="h-4 w-4 mr-2" />
-                Log In
+                Sign Up
               </Link>
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-foreground"
+            className="lg:hidden text-foreground p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -98,35 +101,49 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
-            <div className="flex flex-col gap-4">
-              <Link to="/" className="text-foreground/80 hover:text-foreground">Home</Link>
-              <div className="text-foreground/80">Games:</div>
-              {games.map((game) => (
-                <Link
-                  key={game.slug}
-                  to={`/game/${game.slug}`}
-                  className="pl-4 text-foreground/60 hover:text-foreground"
-                >
-                  {game.name}
-                </Link>
-              ))}
-              <Link to="/shop" className="text-foreground/80 hover:text-foreground flex items-center gap-1">
-                <ShoppingBag className="h-4 w-4 text-primary" />
-                Shop
+          <div className="lg:hidden py-4 border-t border-border space-y-2">
+            <Link to="/" className="block px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg">
+              Home
+            </Link>
+            
+            <div className="px-4 py-2 text-sm font-medium text-muted-foreground">Games</div>
+            {games.map((game) => (
+              <Link
+                key={game.slug}
+                to={`/game/${game.slug}`}
+                className="block px-6 py-2 text-foreground/60 hover:text-foreground hover:bg-secondary/50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {game.name}
               </Link>
-              <Link to="/calculator" className="text-foreground/80 hover:text-foreground">Calculator</Link>
-              <Link to="/trades" className="text-foreground/80 hover:text-foreground">Trades</Link>
-              <Link to="/blackmarket" className="text-foreground/80 hover:text-foreground flex items-center gap-1">
-                <DollarSign className="h-4 w-4 text-destructive" />
-                Black Market
-              </Link>
-              <Link to="/values" className="text-foreground/80 hover:text-foreground">Value Changes</Link>
-              <Button variant="outline" size="sm" className="w-fit border-primary text-primary" asChild>
-                <Link to="/login">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Log In
-                </Link>
+            ))}
+            
+            <div className="border-t border-border my-2" />
+            
+            <Link to="/calculator" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Calculator className="h-4 w-4 text-primary" /> Calculator
+            </Link>
+            <Link to="/values" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <TrendingUp className="h-4 w-4 text-green" /> Values
+            </Link>
+            <Link to="/trades" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Repeat className="h-4 w-4 text-accent" /> Trades
+            </Link>
+            <Link to="/shop" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <ShoppingBag className="h-4 w-4 text-gold" /> Shop
+            </Link>
+            <Link to="/blackmarket" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Skull className="h-4 w-4 text-destructive" /> Black Market
+            </Link>
+            
+            <div className="border-t border-border my-2" />
+            
+            <div className="flex gap-2 px-4">
+              <Button variant="outline" size="sm" className="flex-1" asChild>
+                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+              </Button>
+              <Button size="sm" className="flex-1" asChild>
+                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
               </Button>
             </div>
           </div>
