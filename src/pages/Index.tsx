@@ -1,9 +1,9 @@
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import PopularItems from "@/components/PopularItems";
-import StatsSection from "@/components/StatsSection";
-import HowItWorks from "@/components/HowItWorks";
-import Footer from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
+import { HeroSection } from "@/components/HeroSection";
+import { FeaturedItems } from "@/components/FeaturedItems";
+import { GamesSection } from "@/components/GamesSection";
+import { ValueChanges } from "@/components/ValueChanges";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -11,9 +11,9 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <PopularItems />
-        <StatsSection />
-        <HowItWorks />
+        <FeaturedItems />
+        <GamesSection />
+        <ValueChanges />
       </main>
       <Footer />
     </div>
