@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, Skull, TrendingUp, Gamepad2 } from "lucide-react";
+import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, Skull, TrendingUp, Gamepad2, Package } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -9,9 +9,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { games } from "@/data/gameData";
+import { useInventory } from "@/hooks/useInventory";
+import { formatValue } from "@/data/gameData";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { getTotalValue, getItemCount } = useInventory();
+  
+  const portfolioValue = getTotalValue();
+  const itemCount = getItemCount();
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -43,7 +49,6 @@ export const Navbar = () => {
                 {games.map((game) => (
                   <DropdownMenuItem key={game.slug} asChild>
                     <Link to={`/game/${game.slug}`} className="cursor-pointer flex items-center gap-2">
-                      <span className="text-lg">{game.items[0]?.imageUrl}</span>
                       {game.name}
                     </Link>
                   </DropdownMenuItem>
@@ -61,8 +66,18 @@ export const Navbar = () => {
               Values
             </Link>
 
+            <Link to="/inventory" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <Package className="h-4 w-4 text-accent" />
+              Inventory
+              {itemCount > 0 && (
+                <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+
             <Link to="/trades" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
-              <Repeat className="h-4 w-4 text-accent" />
+              <Repeat className="h-4 w-4 text-gold" />
               Trades
             </Link>
 
@@ -70,15 +85,16 @@ export const Navbar = () => {
               <ShoppingBag className="h-4 w-4 text-gold" />
               Shop
             </Link>
-
-            <Link to="/blackmarket" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
-              <Skull className="h-4 w-4 text-destructive" />
-              Black Market
-            </Link>
           </div>
 
-          {/* Auth Buttons */}
+          {/* Portfolio Value & Auth */}
           <div className="hidden lg:flex items-center gap-3">
+            {portfolioValue > 0 && (
+              <Link to="/inventory" className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20">
+                <Package className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-primary">{formatValue(portfolioValue)}</span>
+              </Link>
+            )}
             <Button variant="ghost" size="sm" asChild>
               <Link to="/login">Log In</Link>
             </Button>
@@ -102,7 +118,18 @@ export const Navbar = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-border space-y-2">
-            <Link to="/" className="block px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg">
+            {portfolioValue > 0 && (
+              <Link 
+                to="/inventory" 
+                className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg mx-2 mb-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Package className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-primary">Portfolio: {formatValue(portfolioValue)}</span>
+              </Link>
+            )}
+            
+            <Link to="/" className="block px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
             
@@ -126,14 +153,14 @@ export const Navbar = () => {
             <Link to="/values" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <TrendingUp className="h-4 w-4 text-green" /> Values
             </Link>
+            <Link to="/inventory" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Package className="h-4 w-4 text-accent" /> Inventory {itemCount > 0 && `(${itemCount})`}
+            </Link>
             <Link to="/trades" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-              <Repeat className="h-4 w-4 text-accent" /> Trades
+              <Repeat className="h-4 w-4 text-gold" /> Trades
             </Link>
             <Link to="/shop" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <ShoppingBag className="h-4 w-4 text-gold" /> Shop
-            </Link>
-            <Link to="/blackmarket" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-              <Skull className="h-4 w-4 text-destructive" /> Black Market
             </Link>
             
             <div className="border-t border-border my-2" />
