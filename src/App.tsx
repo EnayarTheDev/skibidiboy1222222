@@ -11,6 +11,7 @@ import Shop from "./pages/Shop";
 import Trades from "./pages/Trades";
 import BlackMarket from "./pages/BlackMarket";
 import Login from "./pages/Login";
+import Inventory from "./pages/Inventory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/trades" element={<Trades />} />
           <Route path="/blackmarket" element={<BlackMarket />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/inventory" element={<Inventory />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

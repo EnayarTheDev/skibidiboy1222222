@@ -27,7 +27,7 @@ export const games: Game[] = [
     name: "Murder Mystery 2",
     slug: "mm2",
     description: "Trade knives and guns with accurate values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-c5c90b0c3e1c7bc9d2d9e3f8d4e5a6b7/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/murder-mystery-2/images/e/e6/Site-logo.png",
     color: "red",
     categories: ["All", "Godlies", "Ancients", "Chromas", "Legendaries", "Rares", "Pets"],
     items: [
@@ -48,7 +48,7 @@ export const games: Game[] = [
     name: "Jailbreak",
     slug: "jailbreak",
     description: "Vehicle and item trading values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-a1b2c3d4e5f6g7h8i9j0/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/rblx-jailbreak/images/e/e6/Site-logo.png",
     color: "blue",
     categories: ["All", "Vehicles", "Spoilers", "Rims", "Textures", "Colors", "Hypers"],
     items: [
@@ -69,7 +69,7 @@ export const games: Game[] = [
     name: "Blox Fruits",
     slug: "bloxfruits",
     description: "Fruit and gamepass trading values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-b2c3d4e5f6g7h8i9j0k1/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/roblox-blox-piece/images/e/e6/Site-logo.png",
     color: "orange",
     categories: ["All", "Mythical", "Legendary", "Rare", "Uncommon", "Common", "Gamepasses"],
     items: [
@@ -88,7 +88,7 @@ export const games: Game[] = [
     name: "Adopt Me",
     slug: "adoptme",
     description: "Pet and item trading values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-c3d4e5f6g7h8i9j0k1l2/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/adoptme/images/e/e6/Site-logo.png",
     color: "pink",
     categories: ["All", "Legendary Pets", "Ultra Rare", "Rare", "Uncommon", "Common", "Eggs", "Vehicles"],
     items: [
@@ -107,7 +107,7 @@ export const games: Game[] = [
     name: "Pet Simulator 99",
     slug: "petsim99",
     description: "Pet and item trading values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-d4e5f6g7h8i9j0k1l2m3/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/pet-simulator-x/images/e/e6/Site-logo.png",
     color: "yellow",
     categories: ["All", "Huge", "Titanic", "Exclusive", "Event", "Basic"],
     items: [
@@ -123,7 +123,7 @@ export const games: Game[] = [
     name: "Blade Ball",
     slug: "bladeball",
     description: "Sword and ability trading values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-e5f6g7h8i9j0k1l2m3n4/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/blade-ball/images/e/e6/Site-logo.png",
     color: "cyan",
     categories: ["All", "Mythic", "Legendary", "Epic", "Rare", "Abilities"],
     items: [
@@ -139,7 +139,7 @@ export const games: Game[] = [
     name: "Grow a Garden",
     slug: "growagarden",
     description: "Seeds and plant trading values",
-    imageUrl: "https://tr.rbxcdn.com/180DAY-f6g7h8i9j0k1l2m3n4o5/768/432/Image/Webp/noFilter",
+    imageUrl: "https://static.wikia.nocookie.net/grow-a-garden/images/e/e6/Site-logo.png",
     color: "green",
     categories: ["All", "Mythic Seeds", "Legendary Seeds", "Rare Seeds", "Tools", "Decorations"],
     items: [
