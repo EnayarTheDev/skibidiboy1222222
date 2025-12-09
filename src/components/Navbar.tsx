@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, Skull, TrendingUp, Gamepad2, Package } from "lucide-react";
+import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, TrendingUp, Gamepad2, Package, Scale } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -23,7 +23,6 @@ export const Navbar = () => {
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Gamepad2 className="w-6 h-6 text-primary-foreground" />
@@ -34,7 +33,6 @@ export const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             <Link to="/" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors">
               Home
@@ -66,6 +64,11 @@ export const Navbar = () => {
               Values
             </Link>
 
+            <Link to="/wfl" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <Scale className="h-4 w-4 text-gold" />
+              W/F/L
+            </Link>
+
             <Link to="/inventory" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
               <Package className="h-4 w-4 text-accent" />
               Inventory
@@ -87,7 +90,6 @@ export const Navbar = () => {
             </Link>
           </div>
 
-          {/* Portfolio Value & Auth */}
           <div className="hidden lg:flex items-center gap-3">
             {portfolioValue > 0 && (
               <Link to="/inventory" className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20">
@@ -106,7 +108,6 @@ export const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="lg:hidden text-foreground p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -115,7 +116,6 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-border space-y-2">
             {portfolioValue > 0 && (
@@ -152,6 +152,9 @@ export const Navbar = () => {
             </Link>
             <Link to="/values" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <TrendingUp className="h-4 w-4 text-green" /> Values
+            </Link>
+            <Link to="/wfl" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Scale className="h-4 w-4 text-gold" /> W/F/L
             </Link>
             <Link to="/inventory" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <Package className="h-4 w-4 text-accent" /> Inventory {itemCount > 0 && `(${itemCount})`}
