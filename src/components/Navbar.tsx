@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, TrendingUp, Gamepad2, Package, Scale } from "lucide-react";
+import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, TrendingUp, Gamepad2, Package, Scale, Bell, LogOut } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -8,13 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { games } from "@/data/gameData";
+import { games, formatValue } from "@/data/gameData";
 import { useInventory } from "@/hooks/useInventory";
-import { formatValue } from "@/data/gameData";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { getTotalValue, getItemCount } = useInventory();
+  const { user, signOut } = useAuth();
   
   const portfolioValue = getTotalValue();
   const itemCount = getItemCount();
@@ -69,6 +70,11 @@ export const Navbar = () => {
               W/F/L
             </Link>
 
+            <Link to="/alerts" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+              <Bell className="h-4 w-4 text-accent" />
+              Alerts
+            </Link>
+
             <Link to="/inventory" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
               <Package className="h-4 w-4 text-accent" />
               Inventory
@@ -97,15 +103,41 @@ export const Navbar = () => {
                 <span className="text-sm font-medium text-primary">{formatValue(portfolioValue)}</span>
               </Link>
             )}
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/login">Log In</Link>
-            </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
-              <Link to="/login">
-                <LogIn className="h-4 w-4 mr-2" />
-                Sign Up
-              </Link>
-            </Button>
+            
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {user.email?.split('@')[0]}
+                    <ChevronDown className="h-4 w-4 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-card border-border">
+                  <DropdownMenuItem asChild>
+                    <Link to="/inventory">My Inventory</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/alerts">My Alerts</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={signOut} className="text-destructive">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Log Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/auth">Log In</Link>
+                </Button>
+                <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
+                  <Link to="/auth">
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Sign Up
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
 
           <button
@@ -156,6 +188,9 @@ export const Navbar = () => {
             <Link to="/wfl" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <Scale className="h-4 w-4 text-gold" /> W/F/L
             </Link>
+            <Link to="/alerts" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Bell className="h-4 w-4 text-accent" /> Alerts
+            </Link>
             <Link to="/inventory" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <Package className="h-4 w-4 text-accent" /> Inventory {itemCount > 0 && `(${itemCount})`}
             </Link>
@@ -168,14 +203,23 @@ export const Navbar = () => {
             
             <div className="border-t border-border my-2" />
             
-            <div className="flex gap-2 px-4">
-              <Button variant="outline" size="sm" className="flex-1" asChild>
-                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
-              </Button>
-              <Button size="sm" className="flex-1" asChild>
-                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
-              </Button>
-            </div>
+            {user ? (
+              <div className="px-4">
+                <p className="text-sm text-muted-foreground mb-2">Logged in as {user.email}</p>
+                <Button variant="outline" size="sm" className="w-full" onClick={() => { signOut(); setMobileMenuOpen(false); }}>
+                  <LogOut className="h-4 w-4 mr-2" /> Log Out
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2 px-4">
+                <Button variant="outline" size="sm" className="flex-1" asChild>
+                  <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+                </Button>
+                <Button size="sm" className="flex-1" asChild>
+                  <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>

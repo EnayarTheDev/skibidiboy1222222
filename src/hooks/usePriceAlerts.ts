@@ -33,17 +33,17 @@ export const usePriceAlerts = () => {
     if (!user) return;
     
     setLoading(true);
-    const { data, error } = await supabase
-      .from('price_alerts')
+    const { data, error } = await (supabase
+      .from('price_alerts' as any)
       .select('*')
       .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
 
     if (error) {
       console.error('Error fetching alerts:', error);
       toast({ title: 'Error', description: 'Failed to load alerts', variant: 'destructive' });
     } else {
-      setAlerts(data as PriceAlert[]);
+      setAlerts((data || []) as PriceAlert[]);
     }
     setLoading(false);
   };
@@ -60,14 +60,14 @@ export const usePriceAlerts = () => {
       return false;
     }
 
-    const { error } = await supabase.from('price_alerts').insert({
+    const { error } = await (supabase.from('price_alerts' as any).insert({
       user_id: user.id,
       item_id: itemId,
       game_id: gameId,
       item_name: itemName,
       target_value: targetValue,
       condition
-    });
+    }) as any);
 
     if (error) {
       console.error('Error creating alert:', error);
@@ -81,10 +81,10 @@ export const usePriceAlerts = () => {
   };
 
   const deleteAlert = async (alertId: string) => {
-    const { error } = await supabase
-      .from('price_alerts')
+    const { error } = await (supabase
+      .from('price_alerts' as any)
       .delete()
-      .eq('id', alertId);
+      .eq('id', alertId) as any);
 
     if (error) {
       console.error('Error deleting alert:', error);
@@ -98,10 +98,10 @@ export const usePriceAlerts = () => {
   };
 
   const toggleAlert = async (alertId: string, isActive: boolean) => {
-    const { error } = await supabase
-      .from('price_alerts')
+    const { error } = await (supabase
+      .from('price_alerts' as any)
       .update({ is_active: isActive })
-      .eq('id', alertId);
+      .eq('id', alertId) as any);
 
     if (error) {
       console.error('Error updating alert:', error);
