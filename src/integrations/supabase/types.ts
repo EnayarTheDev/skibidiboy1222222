@@ -14,7 +14,155 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      price_alerts: {
+        Row: {
+          condition: string
+          created_at: string
+          game_id: string
+          id: string
+          is_active: boolean
+          item_id: string
+          item_name: string
+          target_value: number
+          triggered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          condition: string
+          created_at?: string
+          game_id: string
+          id?: string
+          is_active?: boolean
+          item_id: string
+          item_name: string
+          target_value: number
+          triggered_at?: string | null
+          user_id: string
+        }
+        Update: {
+          condition?: string
+          created_at?: string
+          game_id?: string
+          id?: string
+          is_active?: boolean
+          item_id?: string
+          item_name?: string
+          target_value?: number
+          triggered_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id: string
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      user_inventory: {
+        Row: {
+          created_at: string
+          game_id: string
+          id: string
+          item_id: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          game_id: string
+          id?: string
+          item_id: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          game_id?: string
+          id?: string
+          item_id?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wfl_trades: {
+        Row: {
+          created_at: string
+          game_id: string
+          id: string
+          their_items: Json
+          user_id: string
+          your_items: Json
+        }
+        Insert: {
+          created_at?: string
+          game_id: string
+          id?: string
+          their_items: Json
+          user_id: string
+          your_items: Json
+        }
+        Update: {
+          created_at?: string
+          game_id?: string
+          id?: string
+          their_items?: Json
+          user_id?: string
+          your_items?: Json
+        }
+        Relationships: []
+      }
+      wfl_votes: {
+        Row: {
+          created_at: string
+          id: string
+          trade_id: string
+          user_id: string
+          vote: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          trade_id: string
+          user_id: string
+          vote: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          trade_id?: string
+          user_id?: string
+          vote?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wfl_votes_trade_id_fkey"
+            columns: ["trade_id"]
+            isOneToOne: false
+            referencedRelation: "wfl_trades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

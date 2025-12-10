@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { TrendingUp, TrendingDown, Minus, Plus, Check, BarChart3 } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Plus, Check, BarChart3, Bell } from "lucide-react";
 import { GameItem, formatValue } from "@/data/gameData";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useInventory } from "@/hooks/useInventory";
 import { toast } from "@/hooks/use-toast";
 import ItemDetailModal from "./ItemDetailModal";
+import PriceAlertModal from "./PriceAlertModal";
 
 interface ItemCardProps {
   item: GameItem;
@@ -28,6 +29,7 @@ const rarityConfig: Record<string, { label: string; className: string }> = {
 
 const ItemCard = ({ item, showGame, gameName, gameId }: ItemCardProps) => {
   const [showModal, setShowModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
   const { addItem, isInInventory, getQuantity } = useInventory();
   const rarityInfo = rarityConfig[item.rarity] || rarityConfig.common;
   
@@ -50,6 +52,11 @@ const ItemCard = ({ item, showGame, gameName, gameId }: ItemCardProps) => {
     }
   };
 
+  const handleAlertClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowAlertModal(true);
+  };
+
   const isEmoji = !item.imageUrl.startsWith('http');
 
   return (
@@ -66,9 +73,17 @@ const ItemCard = ({ item, showGame, gameName, gameId }: ItemCardProps) => {
           <BarChart3 className="h-4 w-4 text-primary" />
         </div>
 
+        {/* Alert Button */}
+        <button
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-secondary rounded"
+          onClick={handleAlertClick}
+        >
+          <Bell className="h-4 w-4 text-accent" />
+        </button>
+
         {/* In Inventory Badge */}
         {inInventory && (
-          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 group-hover:opacity-0">
             <Check className="w-3 h-3" />
             {quantity > 1 && `x${quantity}`}
           </div>
@@ -136,6 +151,14 @@ const ItemCard = ({ item, showGame, gameName, gameId }: ItemCardProps) => {
         gameName={gameName}
         open={showModal}
         onClose={() => setShowModal(false)}
+      />
+
+      <PriceAlertModal
+        item={item}
+        gameId={gameId || ''}
+        gameName={gameName || ''}
+        open={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
       />
     </>
   );
