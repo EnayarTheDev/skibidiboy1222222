@@ -8,9 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Loader2, Pencil, TrendingUp, TrendingDown, Minus, History } from 'lucide-react';
+import { Loader2, Pencil, TrendingUp, TrendingDown, Minus, History, Plus, Trash2 } from 'lucide-react';
 import { formatValue } from '@/data/gameData';
 import ItemValueHistoryChart from './ItemValueHistoryChart';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const AdminItems = () => {
   const [selectedGame, setSelectedGame] = useState<string>('all');
@@ -20,8 +22,23 @@ const AdminItems = () => {
   const [newValue, setNewValue] = useState('');
   const [newDemand, setNewDemand] = useState('');
   const [newTrend, setNewTrend] = useState('');
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const { toast } = useToast();
   
-  const { items, loading, updateItem } = useGameItems(
+  // New item form state
+  const [newItem, setNewItem] = useState({
+    id: '',
+    name: '',
+    value: '',
+    demand: '5',
+    rarity: 'common',
+    trend: 'stable',
+    category: '',
+    image_url: '',
+    game_id: '',
+  });
+  
+  const { items, loading, updateItem, refetch } = useGameItems(
     selectedGame === 'all' ? undefined : selectedGame
   );
 
@@ -50,6 +67,83 @@ const AdminItems = () => {
     }
   };
 
+  const handleAddItem = async () => {
+    if (!newItem.name || !newItem.game_id || !newItem.value || !newItem.category) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const itemId = `${newItem.game_id}-${Date.now()}`;
+    
+    const { error } = await supabase
+      .from('game_items')
+      .insert({
+        id: itemId,
+        game_id: newItem.game_id,
+        name: newItem.name,
+        value: parseInt(newItem.value),
+        demand: parseInt(newItem.demand),
+        rarity: newItem.rarity,
+        trend: newItem.trend,
+        category: newItem.category,
+        image_url: newItem.image_url || '📦',
+      } as any);
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to add item',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    toast({
+      title: 'Success',
+      description: 'Item added successfully',
+    });
+
+    setShowAddDialog(false);
+    setNewItem({
+      id: '',
+      name: '',
+      value: '',
+      demand: '5',
+      rarity: 'common',
+      trend: 'stable',
+      category: '',
+      image_url: '',
+      game_id: '',
+    });
+    refetch();
+  };
+
+  const handleDeleteItem = async (itemId: string) => {
+    const { error } = await supabase
+      .from('game_items')
+      .delete()
+      .eq('id', itemId);
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete item',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    toast({
+      title: 'Success',
+      description: 'Item deleted successfully',
+    });
+    refetch();
+  };
+
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'rising':
@@ -59,6 +153,11 @@ const AdminItems = () => {
       default:
         return <Minus className="h-4 w-4 text-muted-foreground" />;
     }
+  };
+
+  const getGameCategories = (gameId: string) => {
+    const game = games.find(g => g.id === gameId);
+    return game?.categories || [];
   };
 
   if (loading) {
@@ -71,8 +170,138 @@ const AdminItems = () => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Manage Item Values</CardTitle>
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Item
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Item</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Game *</Label>
+                <Select 
+                  value={newItem.game_id} 
+                  onValueChange={(v) => setNewItem({...newItem, game_id: v, category: ''})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select game" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {games.map(game => (
+                      <SelectItem key={game.id} value={game.id}>
+                        {game.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Name *</Label>
+                <Input
+                  value={newItem.name}
+                  onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                  placeholder="Item name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Value *</Label>
+                <Input
+                  type="number"
+                  value={newItem.value}
+                  onChange={(e) => setNewItem({...newItem, value: e.target.value})}
+                  placeholder="Item value"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Category *</Label>
+                <Select 
+                  value={newItem.category} 
+                  onValueChange={(v) => setNewItem({...newItem, category: v})}
+                  disabled={!newItem.game_id}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getGameCategories(newItem.game_id).filter(c => c !== 'All').map(cat => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Demand (1-10)</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={newItem.demand}
+                    onChange={(e) => setNewItem({...newItem, demand: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Rarity</Label>
+                  <Select value={newItem.rarity} onValueChange={(v) => setNewItem({...newItem, rarity: v})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="common">Common</SelectItem>
+                      <SelectItem value="uncommon">Uncommon</SelectItem>
+                      <SelectItem value="rare">Rare</SelectItem>
+                      <SelectItem value="epic">Epic</SelectItem>
+                      <SelectItem value="legendary">Legendary</SelectItem>
+                      <SelectItem value="godly">Godly</SelectItem>
+                      <SelectItem value="ancient">Ancient</SelectItem>
+                      <SelectItem value="chroma">Chroma</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Trend</Label>
+                <Select value={newItem.trend} onValueChange={(v) => setNewItem({...newItem, trend: v})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rising">Rising</SelectItem>
+                    <SelectItem value="stable">Stable</SelectItem>
+                    <SelectItem value="falling">Falling</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Image (emoji or URL)</Label>
+                <Input
+                  value={newItem.image_url}
+                  onChange={(e) => setNewItem({...newItem, image_url: e.target.value})}
+                  placeholder="🔫 or https://..."
+                />
+              </div>
+
+              <Button onClick={handleAddItem} className="w-full">
+                Add Item
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
@@ -211,6 +440,15 @@ const AdminItems = () => {
                           )}
                         </DialogContent>
                       </Dialog>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive hover:text-destructive"
+                        onClick={() => handleDeleteItem(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

@@ -143,16 +143,20 @@ const InventoryPage = () => {
                     </span>
 
                     {/* Item Image */}
-                    <div className="w-16 h-16 rounded-lg mb-3 bg-secondary/50 flex items-center justify-center overflow-hidden">
-                      <img 
-                        src={details.imageUrl} 
-                        alt={details.name}
-                        className="w-full h-full object-contain"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement!.innerHTML = '📦';
-                        }}
-                      />
+                    <div className="w-16 h-16 rounded-lg mb-3 bg-secondary/50 flex items-center justify-center overflow-hidden text-2xl">
+                      {details.image_url?.startsWith('http') ? (
+                        <img 
+                          src={details.image_url} 
+                          alt={details.name}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = '📦';
+                          }}
+                        />
+                      ) : (
+                        <span>{details.image_url || '📦'}</span>
+                      )}
                     </div>
 
                     {/* Item Name */}
@@ -199,9 +203,9 @@ const InventoryPage = () => {
           <div className="text-center py-20">
             <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="font-display text-xl font-bold text-foreground mb-2">Your inventory is empty</h3>
-            <p className="text-muted-foreground mb-6">Add items from the Values page to track your portfolio</p>
+            <p className="text-muted-foreground mb-6">Add items from game pages to track your portfolio</p>
             <Button asChild>
-              <a href="/values">Browse Items</a>
+              <a href="/">Browse Games</a>
             </Button>
           </div>
         )}
