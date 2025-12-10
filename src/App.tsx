@@ -16,6 +16,7 @@ import Auth from "./pages/Auth";
 import Inventory from "./pages/Inventory";
 import WFL from "./pages/WFL";
 import Alerts from "./pages/Alerts";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const AppContent = () => {
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/wfl" element={<WFL />} />
         <Route path="/alerts" element={<Alerts />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

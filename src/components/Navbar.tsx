@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, TrendingUp, Gamepad2, Package, Scale, Bell, LogOut } from "lucide-react";
+import { ChevronDown, LogIn, Menu, X, Calculator, ShoppingBag, Repeat, TrendingUp, Gamepad2, Package, Scale, Bell, LogOut, Shield } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -11,11 +11,13 @@ import {
 import { games, formatValue } from "@/data/gameData";
 import { useInventory } from "@/hooks/useInventory";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { getTotalValue, getItemCount } = useInventory();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useUserRole();
   
   const portfolioValue = getTotalValue();
   const itemCount = getItemCount();
@@ -119,6 +121,14 @@ export const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/alerts">My Alerts</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="text-primary">
+                        <Shield className="h-4 w-4 mr-2" />
+                        Admin Panel
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={signOut} className="text-destructive">
                     <LogOut className="h-4 w-4 mr-2" />
                     Log Out
@@ -202,6 +212,12 @@ export const Navbar = () => {
             </Link>
             
             <div className="border-t border-border my-2" />
+            
+            {isAdmin && (
+              <Link to="/admin" className="flex items-center gap-2 px-4 py-2 text-primary hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+                <Shield className="h-4 w-4" /> Admin Panel
+              </Link>
+            )}
             
             {user ? (
               <div className="px-4">
