@@ -62,19 +62,9 @@ export const Navbar = () => {
               Calculator
             </Link>
 
-            <Link to="/values" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-green" />
-              Values
-            </Link>
-
             <Link to="/wfl" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
               <Scale className="h-4 w-4 text-gold" />
               W/F/L
-            </Link>
-
-            <Link to="/alerts" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
-              <Bell className="h-4 w-4 text-accent" />
-              Alerts
             </Link>
 
             <Link to="/inventory" className="px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
@@ -192,14 +182,8 @@ export const Navbar = () => {
             <Link to="/calculator" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <Calculator className="h-4 w-4 text-primary" /> Calculator
             </Link>
-            <Link to="/values" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-              <TrendingUp className="h-4 w-4 text-green" /> Values
-            </Link>
             <Link to="/wfl" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <Scale className="h-4 w-4 text-gold" /> W/F/L
-            </Link>
-            <Link to="/alerts" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-              <Bell className="h-4 w-4 text-accent" /> Alerts
             </Link>
             <Link to="/inventory" className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-secondary/50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
               <Package className="h-4 w-4 text-accent" /> Inventory {itemCount > 0 && `(${itemCount})`}

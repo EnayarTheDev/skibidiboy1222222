@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { GameItem, games } from '@/data/gameData';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -9,6 +8,19 @@ export interface InventoryItem {
   gameId: string;
   quantity: number;
   addedAt: string;
+}
+
+export interface GameItemFromDB {
+  id: string;
+  game_id: string;
+  name: string;
+  value: number;
+  demand: number;
+  rarity: string;
+  trend: string;
+  category: string;
+  image_url: string | null;
+  last_change: number | null;
 }
 
 const STORAGE_KEY = 'roblox_values_inventory';
@@ -226,21 +238,30 @@ export const useInventory = () => {
     }
   }, [user]);
 
-  const getItemDetails = useCallback((invItem: InventoryItem): (GameItem & { gameName: string }) | null => {
-    const game = games.find(g => g.id === invItem.gameId);
-    if (!game) return null;
-    const item = game.items.find(i => i.id === invItem.itemId);
-    if (!item) return null;
-    return { ...item, gameName: game.name };
+  const [dbItems, setDbItems] = useState<GameItemFromDB[]>([]);
+
+  // Fetch database items for inventory calculations
+  useEffect(() => {
+    const fetchDbItems = async () => {
+      const { data } = await supabase.from('game_items').select('*');
+      setDbItems((data as GameItemFromDB[]) || []);
+    };
+    fetchDbItems();
   }, []);
+
+  const getItemDetails = useCallback((invItem: InventoryItem): (GameItemFromDB & { gameName: string }) | null => {
+    const item = dbItems.find(i => i.id === invItem.itemId);
+    if (!item) return null;
+    return { ...item, gameName: item.game_id };
+  }, [dbItems]);
 
   const getTotalValue = useCallback((): number => {
     return inventory.reduce((total, invItem) => {
-      const details = getItemDetails(invItem);
-      if (!details) return total;
-      return total + (details.value * invItem.quantity);
+      const item = dbItems.find(i => i.id === invItem.itemId);
+      if (!item) return total;
+      return total + (item.value * invItem.quantity);
     }, 0);
-  }, [inventory, getItemDetails]);
+  }, [inventory, dbItems]);
 
   const getItemCount = useCallback((): number => {
     return inventory.reduce((total, item) => total + item.quantity, 0);

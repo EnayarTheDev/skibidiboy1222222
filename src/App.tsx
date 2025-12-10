@@ -7,7 +7,6 @@ import { AuthProvider } from "@/contexts/AuthProvider";
 import { usePriceAlertNotifications } from "@/hooks/usePriceAlertNotifications";
 import Index from "./pages/Index";
 import Calculator from "./pages/Calculator";
-import Values from "./pages/Values";
 import GameDetail from "./pages/GameDetail";
 import Shop from "./pages/Shop";
 import Trades from "./pages/Trades";
@@ -30,7 +29,6 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/calculator" element={<Calculator />} />
-        <Route path="/values" element={<Values />} />
         <Route path="/game/:slug" element={<GameDetail />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/trades" element={<Trades />} />
