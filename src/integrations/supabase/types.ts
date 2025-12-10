@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      game_items: {
+        Row: {
+          category: string
+          created_at: string
+          demand: number
+          game_id: string
+          id: string
+          image_url: string | null
+          last_change: number | null
+          name: string
+          rarity: string
+          trend: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          demand?: number
+          game_id: string
+          id: string
+          image_url?: string | null
+          last_change?: number | null
+          name: string
+          rarity?: string
+          trend?: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          demand?: number
+          game_id?: string
+          id?: string
+          image_url?: string | null
+          last_change?: number | null
+          name?: string
+          rarity?: string
+          trend?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      item_value_history: {
+        Row: {
+          changed_by: string | null
+          id: string
+          item_id: string
+          recorded_at: string
+          value: number
+        }
+        Insert: {
+          changed_by?: string | null
+          id?: string
+          item_id: string
+          recorded_at?: string
+          value: number
+        }
+        Update: {
+          changed_by?: string | null
+          id?: string
+          item_id?: string
+          recorded_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "item_value_history_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "game_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       price_alerts: {
         Row: {
           condition: string
